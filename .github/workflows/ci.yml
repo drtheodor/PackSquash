@@ -113,7 +113,7 @@ jobs:
 
     env:
       # nextext requires this on Windows to pick the intended GNU toolchain
-      RUSTUP_TOOLCHAIN: stable-${{ matrix.host-target }}
+      RUSTUP_TOOLCHAIN: nightly-${{ matrix.host-target }}
 
       # Rust stdlib default backtrace feature doesn't actually work because our
       # release executables are stripped, so skipping it shaves off quite some KiB.

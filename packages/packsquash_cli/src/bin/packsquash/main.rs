@@ -132,7 +132,7 @@ fn run(title_controller: Option<TerminalTitleController>) -> i32 {
 			}
 		}
 		Err(parse_err) => {
-			init_logger(enable_emoji_default, enable_color_default);
+			init_logger(enable_emoji_default, enable_color_default, false);
 
 			error!(
 				"{}\nRun {} -h to see command line argument help",

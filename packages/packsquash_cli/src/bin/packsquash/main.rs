@@ -59,6 +59,7 @@ fn run(title_controller: Option<TerminalTitleController>) -> i32 {
 
 	options.optflag("h", "help", "Prints information about the command line arguments accepted by this application and exits")
 		.optflag("v", "version", "Prints version and copyright information of the application, then exits")
+		.optflag("q", "quiet", "")
 		.optflag(
 			"",
 			"emoji",
@@ -114,8 +115,10 @@ fn run(title_controller: Option<TerminalTitleController>) -> i32 {
 				} else {
 					option_matches.opt_present("color")
 				};
+				
+				let quiet = option_matches.opt_present("quiet");
 
-				init_logger(enable_emoji, enable_color);
+				init_logger(enable_emoji, enable_color, quiet);
 
 				print_version_information(false);
 				println!();
@@ -438,8 +441,9 @@ fn print_version_information(verbose: bool) {
 
 /// Initializes the logging of the application, responsible for showing to the user relevant
 /// application operation information.
-fn init_logger(enable_emoji: bool, enable_colors: bool) {
+fn init_logger(enable_emoji: bool, enable_colors: bool, quiet: bool) {
 	let mut logger_builder = Builder::new();
+	let level_filter = if quiet { LevelFilter::Warn } else { LevelFilter::max() };
 
 	logger_builder
 		.target(LOG_TARGET)
@@ -449,7 +453,7 @@ fn init_logger(enable_emoji: bool, enable_colors: bool) {
 			WriteStyle::Never
 		})
 		// Hide log messages from libraries by default
-		.filter(Some("packsquash"), LevelFilter::max())
+		.filter(Some("packsquash"), level_filter)
 		.format(move |f, record| {
 			use std::io::Write;
 
